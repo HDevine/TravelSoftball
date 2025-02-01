@@ -20,7 +20,6 @@ import {
   TabTitleIcon,
   TabTitleText
 } from '@patternfly/react-core';
-import { Thead, Table, Tr, Th, Tbody, Td} from '@patternfly/react-table';
 import Linkify from 'linkify-react';
 import ReactFlipCard from 'reactjs-flip-card';
 import l_gallery_GridTemplateColumns_min from '@patternfly/react-tokens/dist/esm/l_gallery_GridTemplateColumns_min';
@@ -28,18 +27,10 @@ import UsersIcon from '@patternfly/react-icons/dist/esm/icons/users-icon';
 import CalendarIcon from '@patternfly/react-icons/dist/esm/icons/calendar-icon';
 import NewsIcon from '@patternfly/react-icons/dist/esm/icons/newspaper-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
-import avatarImg from '@patternfly/react-core/src/components/assets/avatarImg.svg';
 import FacebookIcon from '@patternfly/react-icons/dist/esm/icons/facebook-icon';
 import InstagramIcon from '@patternfly/react-icons/dist/esm/icons/instagram-icon';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-
-export const columnNames = {
-  title: "Title",
-  date: "Date",
-  time: "Time",
-  body: "Description"
-}
 
 const Team14u = ({ children }) => {
   const [coachData, setCoachData] = React.useState(null);
@@ -123,12 +114,7 @@ const Team14u = ({ children }) => {
   }
 
   const handleEventClick = (info) => {
-    console.log(info.event);
-  }
-
-  const handleTabClick = (event, tabIndex) => {
-    setDefaultActiveKey(tabIndex);
-    console.log(tabIndex);
+    alert('Title: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.body);
   }
 
   return (
@@ -140,7 +126,7 @@ const Team14u = ({ children }) => {
         >
         <Label color="red">F5 Tornadoes 14U - Culligan</Label>
       </div>
-      <Tabs defaultActiveKey={defaultActiveKey} aria-label="Team14U-Tabs" role="tab" onSelect={handleTabClick}>
+      <Tabs defaultActiveKey={defaultActiveKey} aria-label="Team14U-Tabs" role="tab">
         <Tab eventKey={0} title={<TabTitleText>Coaches</TabTitleText>} aria-label="14U-Coaches-Tab">
         {coachLoading && (
   		    <Bullseye>
@@ -274,12 +260,13 @@ const Team14u = ({ children }) => {
               </EmptyState>
             </Bullseye>
           )}
-          {!scheduleLoading && (
+          {!scheduleLoading && scheduleData?.length > 0 && (
             <FullCalendar 
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
               height={650}
               events={scheduleData}
+              eventClick={handleEventClick}
               headerToolbar={{
                 left: 'prev,next',
                 center:'title',

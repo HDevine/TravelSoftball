@@ -11,9 +11,10 @@ import {
   PageSidebar,
   PageSidebarBody
 } from "@patternfly/react-core";
+import {NavLink} from 'react-router';
 import TornadoesMasthead from "./TornadoesMasthead";
 
-const TornadoesPageLayout = ({ children}) => {
+const TornadoesPageLayout = ({ children}) => { 
   const [activeGroup, setActiveGroup] = React.useState("itemHome");
   const [activeItem, setActiveItem] = React.useState("itemHome");
 
@@ -25,8 +26,8 @@ const TornadoesPageLayout = ({ children}) => {
   const PageNav = (
     <Nav onSelect={onNavSelect} aria-label="Nav">
       <NavList>
-        <NavItem itemId="itemHome" groupId="itemHome" isActive={activeItem === "itemHome"} to="/">
-          Home
+        <NavItem key='nav-home-link' itemId="itemHome" groupId="itemHome" isActive={activeItem === "itemHome"}>
+          <NavLink to="/">Home</NavLink>
         </NavItem>
         <NavExpandable
           title="Our Teams"
@@ -34,44 +35,44 @@ const TornadoesPageLayout = ({ children}) => {
           isActive={activeGroup === "grpTeams"}
         >
           <NavItem
+            key='nav-10u-link' 
             groupId="grpTeams"
             itemId="grp10uTeam"
             isActive={activeItem === "grp10uTeam"}
-            to="/10u-reed"
           >
-            10U Reed
+            <NavLink to="/10u-reed">10U Reed</NavLink>
           </NavItem>
           <NavItem
+            key='nav-12u-link' 
             groupId="grpTeams"
             itemId="grp12uTeam"
             isActive={activeItem === "grp12uTeam"}
-            to="/12u-gentile"
           >
-            12U Gentile
+            <NavLink to="/12u-gentile">12U Gentile</NavLink>
           </NavItem>
           <NavItem
+            key='nav-14u-link' 
             groupId="grpTeams"
             itemId="grp14uTeam"
             isActive={activeItem === "grp14uTeam"}
-            to="/14u-culligan"
           >
-            14U Culligan
+            <NavLink to="/14u-culligan">14U Culligan</NavLink>
           </NavItem>
           <NavItem
+            key='nav-16u-link' 
             groupId="grpTeams"
             itemId="grp16uTeam"
             isActive={activeItem === "grp16uTeam"}
-            to="/16u-strothers"
           >
-            16U Strothers
+            <NavLink to="/16u-strothers">16U Strothers</NavLink>
           </NavItem>
           <NavItem
+            key='nav-18u-link' 
             groupId="grpTeams"
             itemId="grp18uTeam"
             isActive={activeItem === "grp18uTeam"}
-            to="/18u-sarni"
           >
-            18U Sarni
+            <NavLink to="/18u-sarni">18U Sarni</NavLink>
           </NavItem>
         </NavExpandable>
         <NavExpandable
@@ -80,24 +81,24 @@ const TornadoesPageLayout = ({ children}) => {
           isActive={activeGroup === "grpAbout"}
         >
           <NavItem
+            key='nav-news-link' 
             groupId="grpAbout"
             itemId="grpNews"
             isActive={activeItem === "grpNews"}
-            to="/news"
           >
-            Latest News
+            <NavLink to="/news">Latest News</NavLink>
           </NavItem>
           <NavItem
+            key='nav-contacts-link' 
             groupId="grpAbout"
             itemId="grpContacts"
             isActive={activeItem === "grpContacts"}
-            to="/contacts"
           >
-            Contacts
+            <NavLink to="/contacts">Contacts</NavLink>
           </NavItem>
         </NavExpandable>
-	      <NavItem itemId="itemStore" isActive={activeItem === "itemStore"} to="/store">
-          Tornadoes Gear
+	      <NavItem key='nav-store-link' itemId="itemStore" isActive={activeItem === "itemStore"}>
+          <NavLink to="/store">Tornadoes Gear</NavLink>
         </NavItem>
       </NavList>
     </Nav>

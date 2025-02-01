@@ -55,7 +55,7 @@ const News = ({ children }) => {
     )}
     {!newsLoading && newsData?.length === 0 && (
       <Bullseye>
-        <EmptyState titleText="News for 14U not found" headingLevel="h5" icon={SearchIcon}>
+        <EmptyState titleText="News for EHT Travel Softball not found" headingLevel="h5" icon={SearchIcon}>
           <EmptyStateBody>
             Check your network connection or contact the system administrator.
           </EmptyStateBody>

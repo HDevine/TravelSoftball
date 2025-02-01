@@ -20,7 +20,6 @@ import {
   TabTitleIcon,
   TabTitleText
 } from '@patternfly/react-core';
-import { Thead, Table, Tr, Th, Tbody, Td} from '@patternfly/react-table';
 import Linkify from 'linkify-react';
 import ReactFlipCard from 'reactjs-flip-card';
 import l_gallery_GridTemplateColumns_min from '@patternfly/react-tokens/dist/esm/l_gallery_GridTemplateColumns_min';
@@ -28,16 +27,10 @@ import UsersIcon from '@patternfly/react-icons/dist/esm/icons/users-icon';
 import CalendarIcon from '@patternfly/react-icons/dist/esm/icons/calendar-icon';
 import NewsIcon from '@patternfly/react-icons/dist/esm/icons/newspaper-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
-import avatarImg from '@patternfly/react-core/src/components/assets/avatarImg.svg';
 import FacebookIcon from '@patternfly/react-icons/dist/esm/icons/facebook-icon';
 import InstagramIcon from '@patternfly/react-icons/dist/esm/icons/instagram-icon';
-
-export const columnNames = {
-  title: "Title",
-  date: "Date",
-  time: "Time",
-  body: "Description"
-}
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 const Team16u = ({ children }) => {
   const [coachData, setCoachData] = React.useState(null);
@@ -117,7 +110,11 @@ const Team16u = ({ children }) => {
       })
     }
 
-  return (
+    const handleEventClick = (info) => {
+      alert('Title: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.body);
+    }
+
+    return (
     <div>
       <div
         style={{
@@ -260,26 +257,20 @@ const Team16u = ({ children }) => {
               </EmptyState>
             </Bullseye>
           )}
-          {!scheduleLoading && scheduleData?.map(row => (
-            <Table aria-label="Schedule Table" isStriped>
-              <Thead>
-                <Tr>
-                  <Th width={25} modifier="wrap">{columnNames.title}</Th>
-                  <Th width={25} modifier="wrap">{columnNames.date}</Th>
-                  <Th width={25} modifier="wrap">{columnNames.time}</Th>
-                  <Th width={25} modifier="wrap">{columnNames.body}</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr key={'Schedule=' + row.id}>
-                  <Td dataLabel={columnNames.title}>{row.title}</Td>
-                  <Td dataLabel={columnNames.date}>{row.date}</Td>
-                  <Td dataLabel={columnNames.time}>{row.time}</Td>
-                  <Td dataLabel={columnNames.body}>{row.body}</Td>
-                </Tr>
-              </Tbody>
-            </Table>
-         ))}
+          {!scheduleLoading && scheduleData?.length > 0 && (
+            <FullCalendar 
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
+              height={650}
+              events={scheduleData}
+              eventClick={handleEventClick}
+              headerToolbar={{
+                left: 'prev,next',
+                center:'title',
+                right:'dayGridMonth,dayGridWeek,dayGridDay'
+              }}
+            />
+          )}
       </Tab>
         <Tab eventKey={3} title={<><TabTitleIcon><NewsIcon /></TabTitleIcon><TabTitleText>News</TabTitleText></>} aria-label="16U-News-Tab">
         {newsLoading && (
