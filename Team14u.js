@@ -29,8 +29,9 @@ import NewsIcon from '@patternfly/react-icons/dist/esm/icons/newspaper-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import FacebookIcon from '@patternfly/react-icons/dist/esm/icons/facebook-icon';
 import InstagramIcon from '@patternfly/react-icons/dist/esm/icons/instagram-icon';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
+import {Calendar, momentLocalizer} from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const Team14u = ({ children }) => {
   const [coachData, setCoachData] = React.useState(null);
@@ -42,7 +43,9 @@ const Team14u = ({ children }) => {
   const [newsData, setNewsData] = React.useState(null);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [err, setErr] = React.useState(null);
-  const [defaultActiveKey, setDefaultActiveKey] = React.useState(0);
+
+  const localizer = momentLocalizer(moment);
+
   const styles={
     card: {background: 'white', color: 'black', borderRadius: 20}
   }
@@ -53,9 +56,7 @@ const Team14u = ({ children }) => {
       fetchPlayers();
       fetchSchedule();
       fetchNews();
-      setDefaultActiveKey(2);
-      setDefaultActiveKey(0);
-    }, []);
+  }, []);
   
   const fetchCoaches = () => {
 //    fetch(`http://softball-pi4/db/GetTravelCoaches14U.php`)
@@ -92,6 +93,21 @@ const Team14u = ({ children }) => {
         const jsonResponse = await resp.json()
         setScheduleData(jsonResponse);
         setScheduleLoading(false);
+
+        const newSchedule = jsonResponse.map((event) => {
+          return {
+            id: event.id,
+            start: new Date(event.start),
+            end: new Date(event.end),
+            startDate: event.startDate,
+            endDate: event.endDate,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            title: event.title,
+            desc: event.desc
+          };
+        });
+        setScheduleData(newSchedule);
       })
       .catch(err => {
         setErr(err);
@@ -114,7 +130,14 @@ const Team14u = ({ children }) => {
   }
 
   const handleEventClick = (info) => {
-    alert('Title: ' + info.event.title + '\nDescription: ' + info.event.extendedProps.body);
+    const startDateStr = info.start;
+    const endDateStr = info.end;
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    const startTime = startDate.toLocaleTimeString();
+    const endTime = endDate.toLocaleTimeString();
+
+    alert('Title: ' + info.title + '\nDescription: ' + info.desc + '\nStarts at: ' + startTime + '  Ends at: ' + endTime);
   }
 
   return (
@@ -126,7 +149,7 @@ const Team14u = ({ children }) => {
         >
         <Label color="red">F5 Tornadoes 14U - Culligan</Label>
       </div>
-      <Tabs defaultActiveKey={defaultActiveKey} aria-label="Team14U-Tabs" role="tab">
+      <Tabs defaultActiveKey={0} aria-label="Team14U-Tabs" role="tab">
         <Tab eventKey={0} title={<TabTitleText>Coaches</TabTitleText>} aria-label="14U-Coaches-Tab">
         {coachLoading && (
   		    <Bullseye>
@@ -261,17 +284,15 @@ const Team14u = ({ children }) => {
             </Bullseye>
           )}
           {!scheduleLoading && scheduleData?.length > 0 && (
-            <FullCalendar 
-              plugins={[dayGridPlugin]}
-              initialView="dayGridMonth"
-              height={650}
+            <Calendar
+              localizer={localizer}
+              defaultDate={Date.now()}
               events={scheduleData}
-              eventClick={handleEventClick}
-              headerToolbar={{
-                left: 'prev,next',
-                center:'title',
-                right:'dayGridMonth,dayGridWeek,dayGridDay'
-              }}
+              allDayAccessor={false}
+              startAccessor="start"
+              endAccessor="end"
+              onSelectEvent={handleEventClick}
+              style={{ height: 650 }}
             />
           )}
         </Tab>

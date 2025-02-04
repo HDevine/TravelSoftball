@@ -24,9 +24,9 @@ const TornadoesMasthead = ({ children }) => {
       <MastheadMain>
         <MastheadBrand>
           <Brand src={Image} alt="Tornadoes Logo" widths={{
-             default: '20px',
-             sm: '40px',
-             md: '160px'
+             default: '40px',
+             sm: '80px',
+             md: '320px'
           }}/>
         </MastheadBrand>
       </MastheadMain>
