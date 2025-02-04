@@ -9,6 +9,8 @@ import {
   FlexItem,
   Spinner
 } from '@patternfly/react-core';
+import Linkify from 'linkify-react';
+import { Link } from 'react-router-dom';
 import InfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 
@@ -67,8 +69,10 @@ const News = ({ children }) => {
         <Content isEditorial component="h1">
           {row.title}
         </Content>
-        <p>{row.item}</p>
-      </Content>
+        <Content>
+          <p>{row.item}</p>
+        </Content>
+    </Content>
     ))}
     </div>
   );
