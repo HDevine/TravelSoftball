@@ -22,6 +22,8 @@ import Image from "./tornados.png";
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 
 const Contacts = ({ children }) => {
+  const [boardData, setBoardData] = React.useState(null);
+  const [boardLoading, setBoardLoading] = React.useState(true);
   const [coach10UData, setCoach10UData] = React.useState(null);
   const [coach10ULoading, setCoach10ULoading] = React.useState(true);
   const [coach12UData, setCoach12UData] = React.useState(null);
@@ -35,13 +37,28 @@ const Contacts = ({ children }) => {
   const [err, setErr] = React.useState(null);
 
   useEffect(() => {
-    // Fetch data for Travel Coaches and Players
-      fetch10UCoaches();
-      fetch12UCoaches();
-      fetch14UCoaches();
-      fetch16UCoaches();
-      fetch18UCoaches();
-    }, []);
+    // Fetch data for Travel Coaches and Players, and Board President
+    fetchBoardPresident();
+    fetch10UCoaches();
+    fetch12UCoaches();
+    fetch14UCoaches();
+    fetch16UCoaches();
+    fetch18UCoaches();
+  }, []);
+
+  const fetchBoardPresident = () => {
+    //    fetch(`http://softball-pi4/db/GetTravelHeadCoach10U.php`)
+    fetch(`https://www.ehtsoftball.com/db/GetBoardPresident.php`)
+    .then(async resp => {
+      const jsonResponse = await resp.json()
+      setBoardData(jsonResponse);
+      setBoardLoading(false);
+    })
+    .catch(err => {
+      setErr(err);
+      setBoardLoading(false);
+    })
+  }
 
   const fetch10UCoaches = () => {
 //    fetch(`http://softball-pi4/db/GetTravelHeadCoach10U.php`)
@@ -116,33 +133,49 @@ const Contacts = ({ children }) => {
   return (
     <div>
       <Banner color="green">Tornadoes Contacts</Banner>
-      <Card>
-        <CardBody>
-          <Brand src={Image} alt="Tornadoes Logo" style={{height: '100px', width: '100px'}} />
-          <DescriptionList>
-            <DescriptionListGroup>
-              <DescriptionListTerm>Egg Harbor Township Youth Softball President</DescriptionListTerm>
-              <DescriptionListDescription>Christine Culligan</DescriptionListDescription>
-            </DescriptionListGroup>
-            <DescriptionListGroup>
-                <DescriptionListTerm>Phone Number</DescriptionListTerm>
-                <DescriptionListDescription>(609) 271-0492</DescriptionListDescription>
+      {boardLoading && (
+          <Bullseye>
+            <Spinner size="xl" />
+          </Bullseye>
+        )}
+        {!boardLoading && boardData?.length === 0 && (
+          <Bullseye>
+            <EmptyState titleText="Board President not found" headingLevel="h5" icon={SearchIcon}>
+              <EmptyStateBody>
+                Check your network connection or contact the system administrator.
+              </EmptyStateBody>
+            </EmptyState>
+          </Bullseye>
+        )}
+        {!boardLoading && boardData?.map(row => (
+        <Card>
+          <CardBody>
+            <Brand src={Image} alt="Tornadoes Logo" style={{height: '100px', width: '100px'}} />
+            <DescriptionList>
+              <DescriptionListGroup>
+                <DescriptionListTerm>Egg Harbor Township Youth Softball President</DescriptionListTerm>
+                <DescriptionListDescription>{row.name}</DescriptionListDescription>
               </DescriptionListGroup>
               <DescriptionListGroup>
-                <DescriptionListTerm>EMail Address</DescriptionListTerm>
-                <DescriptionListDescription>christineanne21@aol.com</DescriptionListDescription>
-              </DescriptionListGroup>
-              <DescriptionListGroup>
-                <DescriptionListTerm>Website</DescriptionListTerm>
-                <DescriptionListDescription>
-                  <Linkify>
-                    <a target="blank" href='https://www.ehtsoftball.com'>Egg Harbor Township Youth Softball</a>                  
-                  </Linkify>
-                </DescriptionListDescription>
-              </DescriptionListGroup>
-           </DescriptionList>
-        </CardBody>
-      </Card>
+                  <DescriptionListTerm>Phone Number</DescriptionListTerm>
+                  <DescriptionListDescription>{row.phone}</DescriptionListDescription>
+                </DescriptionListGroup>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>EMail Address</DescriptionListTerm>
+                  <DescriptionListDescription>{row.email}</DescriptionListDescription>
+                </DescriptionListGroup>
+                <DescriptionListGroup>
+                  <DescriptionListTerm>Website</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    <Linkify>
+                      <a target="blank" href='https://www.ehtsoftball.com'>Egg Harbor Township Youth Softball</a>                  
+                    </Linkify>
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+             </DescriptionList>
+          </CardBody>
+        </Card>
+      ))}
       <Gallery hasGutter style={{
         [l_gallery_GridTemplateColumns_min.name]: '260px'
       }}>

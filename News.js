@@ -10,7 +10,6 @@ import {
   Spinner
 } from '@patternfly/react-core';
 import Linkify from 'linkify-react';
-import { Link } from 'react-router-dom';
 import InfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 
@@ -18,6 +17,9 @@ const News = ({ children }) => {
   const [newsData, setNewsData] = React.useState(null);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [err, setErr] = React.useState(null);
+  const options ={
+    target: "_blank"
+  };
 
   useEffect(() => {
     // Fetch News for Organization
@@ -65,6 +67,7 @@ const News = ({ children }) => {
       </Bullseye>
     )}
     {!newsLoading && newsData?.map(row => (
+      <Linkify options={options}>
       <Content>
         <Content isEditorial component="h1">
           {row.title}
@@ -73,6 +76,7 @@ const News = ({ children }) => {
           <p>{row.item}</p>
         </Content>
     </Content>
+    </Linkify>
     ))}
     </div>
   );
