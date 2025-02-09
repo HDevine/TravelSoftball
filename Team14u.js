@@ -127,7 +127,7 @@ const Team14u = ({ children }) => {
           startTime: event.startTime,
           endTime: event.endTime,
           title: event.title,
-          desc: event.desc
+          description: event.description
         };
       });
       setScheduleData(newSchedule);
@@ -160,7 +160,7 @@ const Team14u = ({ children }) => {
     const startTime = startDate.toLocaleTimeString();
     const endTime = endDate.toLocaleTimeString();
 
-    alert('Title: ' + info.title + '\nDescription: ' + info.desc + '\nStarts at: ' + startTime + '  Ends at: ' + endTime);
+    alert('Title: ' + info.title + '\nDescription: ' + info.description + '\nStarts at: ' + startTime + '  Ends at: ' + endTime);
   }
 
   return (
