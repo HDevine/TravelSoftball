@@ -3,6 +3,7 @@ import {
   Avatar,
   Brand,
   Bullseye,
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -14,6 +15,11 @@ import {
   EmptyState,
   EmptyStateBody,
   Gallery,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
   Label,
   Spinner,
   Tabs,
@@ -47,6 +53,16 @@ const Team14u = ({ children }) => {
   const [newsData, setNewsData] = React.useState(null);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [err, setErr] = React.useState(null);
+
+  // The following variables are for the Event modal dialog
+  const [isModalOpen, setModalOpen] = React.useState(false);
+  const [eventTitle, setEventTitle] = React.useState("");
+  const [eventDescription, setEventDescription] = React.useState("");
+  const [eventStartTime, setEventStartTime] = React.useState("");
+  const [eventEndTime, setEventEndTime] = React.useState("");
+  const handleModalToggle = () => {
+    setModalOpen(!isModalOpen);
+  };
 
   const options ={
     target: "_blank"
@@ -160,11 +176,34 @@ const Team14u = ({ children }) => {
     const startTime = startDate.toLocaleTimeString();
     const endTime = endDate.toLocaleTimeString();
 
-    alert('Title: ' + info.title + '\nDescription: ' + info.description + '\nStarts at: ' + startTime + '  Ends at: ' + endTime);
+    // Set Event Details ...
+    setEventTitle(info.title);
+    setEventDescription(info.description);
+    setEventStartTime(startTime);
+    setEventEndTime(endTime);
+
+    // ... and show them!
+    setModalOpen(true);
   }
 
   return (
-    <div>
+   <div>
+    <Modal variant={ModalVariant.medium}
+         title={eventTitle}
+         id="tornadoes_event"
+         isOpen={isModalOpen}
+         onClose={handleModalToggle}
+    >
+      <ModalHeader title={<Label color="green">Culligan 14U Events</Label>} description={eventTitle} descriptorId="events-description" labelId="events-description" />
+      <ModalBody>
+        Event Description: {eventDescription}<br/>Starts: {eventStartTime} <br />Ends: {eventEndTime} <br />
+      </ModalBody>    
+      <ModalFooter>
+        <Button key="event-info" variant="primary" form="modal-with-form-form" onClick={handleModalToggle}>
+          Close
+        </Button>
+      </ModalFooter>
+    </Modal>
       <div
         style={{
           textAlign: "center"
@@ -230,7 +269,7 @@ const Team14u = ({ children }) => {
             </CardFooter>
           </Card>
           <Card>
-            {row.teamPic && <Brand src={row.teamPic} alt={row.name} size="xl" isBordered />}
+            {row.teamPic && <Brand src={row.teamPic} alt={row.name} size="xl" />}
           </Card>
           </Gallery>
           </React.Fragment>
@@ -292,7 +331,7 @@ const Team14u = ({ children }) => {
                       frontStyle={styles.card}
                       backStyle={styles.card}
                       frontComponent=
-                        {row.image && <Avatar src={row.image} alt={row.name} size="xl" isBordered />}
+                        {row.image && <Avatar src={row.image} alt={row.name} size="xl" />}
                       backComponent={
                         <DescriptionList>
                           <DescriptionListGroup>
@@ -339,6 +378,7 @@ const Team14u = ({ children }) => {
             </Bullseye>
           )}
           {!scheduleLoading && scheduleData?.length > 0 && (
+            <React.Fragment>
             <Calendar
               localizer={localizer}
               defaultDate={Date.now()}
@@ -349,6 +389,7 @@ const Team14u = ({ children }) => {
               onSelectEvent={handleEventClick}
               style={{ height: 650 }}
             />
+            </React.Fragment>
           )}
         </Tab>
         <Tab eventKey={3} title={<><TabTitleIcon><NewsIcon /></TabTitleIcon><TabTitleText>News</TabTitleText></>} aria-label="14U-News-Tab">

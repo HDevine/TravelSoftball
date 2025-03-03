@@ -3,6 +3,7 @@ import {
   Avatar,
   Brand,
   Bullseye,
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -14,6 +15,11 @@ import {
   EmptyState,
   EmptyStateBody,
   Gallery,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalVariant,
   Label,
   Spinner,
   Tabs,
@@ -47,6 +53,16 @@ const Team10u = ({ children }) => {
   const [newsData, setNewsData] = React.useState(null);
   const [newsLoading, setNewsLoading] = React.useState(true);
   const [err, setErr] = React.useState(null);
+
+  // The following variables are for the Event modal dialog
+  const [isModalOpen, setModalOpen] = React.useState(false);
+  const [eventTitle, setEventTitle] = React.useState("");
+  const [eventDescription, setEventDescription] = React.useState("");
+  const [eventStartTime, setEventStartTime] = React.useState("");
+  const [eventEndTime, setEventEndTime] = React.useState("");
+  const handleModalToggle = () => {
+    setModalOpen(!isModalOpen);
+  };
 
   const options ={
     target: "_blank"
@@ -160,11 +176,34 @@ const Team10u = ({ children }) => {
     const startTime = startDate.toLocaleTimeString();
     const endTime = endDate.toLocaleTimeString();
   
-    alert('Title: ' + info.title + '\nDescription: ' + info.description + '\nStarts at: ' + startTime + '  Ends at: ' + endTime);
+    // Set Event Details ...
+    setEventTitle(info.title);
+    setEventDescription(info.description);
+    setEventStartTime(startTime);
+    setEventEndTime(endTime);
+
+    // ... and show them!
+    setModalOpen(true);
   }
   
     return (
     <div>
+    <Modal variant={ModalVariant.medium}
+         title={eventTitle}
+         id="tornadoes_event"
+         isOpen={isModalOpen}
+         onClose={handleModalToggle}
+    >
+      <ModalHeader title={<Label color="green">Reed 10U Events</Label>} description={eventTitle} descriptorId="events-description" labelId="events-description" />
+      <ModalBody>
+        Event Description: {eventDescription}<br/>Starts: {eventStartTime} <br />Ends: {eventEndTime} <br />
+      </ModalBody>    
+      <ModalFooter>
+        <Button key="event-info" variant="primary" form="modal-with-form-form" onClick={handleModalToggle}>
+          Close
+        </Button>
+      </ModalFooter>
+    </Modal>
       <div
         style={{
           textAlign: "center"
